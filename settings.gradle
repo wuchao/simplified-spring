@@ -1,0 +1,9 @@
+rootProject.name = 'spring-framework'
+include 'spring-aop'
+include 'spring-beans'
+include 'spring-context'
+include 'spring-core'
+include 'spring-jcl'
+include 'spring-instrument'
+include 'spring-expression'
+
