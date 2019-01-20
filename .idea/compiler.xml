@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring-aop_main" target="1.8" />
+      <module name="spring-aop_test" target="1.8" />
+      <module name="spring-beans_main" target="1.8" />
+      <module name="spring-beans_test" target="1.8" />
+      <module name="spring-context_main" target="1.8" />
+      <module name="spring-context_test" target="1.8" />
+      <module name="spring-core_main" target="1.8" />
+      <module name="spring-core_test" target="1.8" />
+      <module name="spring-expression_main" target="1.8" />
+      <module name="spring-expression_test" target="1.8" />
+      <module name="spring-framework_main" target="1.8" />
+      <module name="spring-framework_test" target="1.8" />
+      <module name="spring-instrument_main" target="1.8" />
+      <module name="spring-instrument_test" target="1.8" />
+      <module name="spring-jcl_main" target="1.8" />
+      <module name="spring-jcl_test" target="1.8" />
+      <module name="spring-web_main" target="1.8" />
+      <module name="spring-web_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -6,4 +6,5 @@ include 'spring-core'
 include 'spring-jcl'
 include 'spring-instrument'
 include 'spring-expression'
+include 'spring-web'
 
