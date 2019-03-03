@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.springframework.spring-webmvc.iml" filepath="$PROJECT_DIR$/.idea/modules/org.springframework.spring-webmvc.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-aop/spring-aop.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-aop/spring-aop.iml" group="spring-aop" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-aop/spring-aop_main.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-aop/spring-aop_main.iml" group="spring-aop" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-aop/spring-aop_test.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-aop/spring-aop_test.iml" group="spring-aop" />
@@ -17,7 +18,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-expression/spring-expression.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-expression/spring-expression.iml" group="spring-expression" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-expression/spring-expression_main.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-expression/spring-expression_main.iml" group="spring-expression" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-expression/spring-expression_test.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-expression/spring-expression_test.iml" group="spring-expression" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/spring-framework.iml" filepath="$PROJECT_DIR$/.idea/spring-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-framework.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-framework_main.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-framework_main.iml" group="spring-framework" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-framework_test.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-framework_test.iml" group="spring-framework" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-instrument/spring-instrument.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-instrument/spring-instrument.iml" group="spring-instrument" />
@@ -29,6 +30,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-web.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-web.iml" group="spring-web" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-web/spring-web_main.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-web/spring-web_main.iml" group="spring-web" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-web/spring-web_test.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-web/spring-web_test.iml" group="spring-web" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-webmvc/spring-webmvc.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-webmvc/spring-webmvc.iml" group="spring-webmvc" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-webmvc/spring-webmvc_main.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-webmvc/spring-webmvc_main.iml" group="spring-webmvc" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-webmvc/spring-webmvc_test.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-webmvc/spring-webmvc_test.iml" group="spring-webmvc" />
     </modules>
   </component>
 </project>

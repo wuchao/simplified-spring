@@ -16,9 +16,8 @@
 
 package org.springframework.cglib.core;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.ClassGenerator;
 import org.springframework.asm.ClassReader;
-import org.springframework.cglib.core.internal.Function;
-import org.springframework.cglib.core.internal.LoadingCache;
 
 import java.lang.ref.WeakReference;
 import java.security.ProtectionDomain;
