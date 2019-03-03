@@ -257,14 +257,14 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
         for (String beanName : candidateNames) {
             BeanDefinition beanDef = registry.getBeanDefinition(beanName);
-            // 如果 BeanDefinition 中的 configurationClass 属性为 full 或者 lite ,则意味着已经处理过了,直接跳过
+            // 如果 BeanDefinition 中的 configurationClass 属性为 full 或者 lite，则意味着已经处理过了，直接跳过
             if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
                     ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
                 }
             }
-            // 判断对应 bean 是否为配置类,如果是,则加入到 configCandidates
+            // 判断对应 bean 是否为配置类，如果是，则加入到 configCandidates
             else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
                 configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
             }
