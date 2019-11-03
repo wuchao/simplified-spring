@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="true" />
+        <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="D:/Program Files/Gradle/gradle-3.5" />
+        <option name="gradleHome" value="D:/Program Files/Gradle/gradle-5.6" />
+        <option name="gradleJvm" value="openjdk1.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/framework-bom" />
             <option value="$PROJECT_DIR$/spring-aop" />
+            <option value="$PROJECT_DIR$/spring-aspects" />
             <option value="$PROJECT_DIR$/spring-beans" />
             <option value="$PROJECT_DIR$/spring-context" />
             <option value="$PROJECT_DIR$/spring-core" />
+            <option value="$PROJECT_DIR$/spring-core/kotlin-coroutines" />
             <option value="$PROJECT_DIR$/spring-expression" />
             <option value="$PROJECT_DIR$/spring-instrument" />
             <option value="$PROJECT_DIR$/spring-jcl" />
-            <option value="$PROJECT_DIR$/spring-web" />
-            <option value="$PROJECT_DIR$/spring-webmvc" />
+            <option value="$PROJECT_DIR$/spring-jdbc" />
+            <option value="$PROJECT_DIR$/spring-tx" />
           </set>
         </option>
-        <option name="useAutoImport" value="true" />
+        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

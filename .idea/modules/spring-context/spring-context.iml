@@ -5,7 +5,6 @@
     <content url="file://$MODULE_DIR$/../../../spring-context">
       <excludeFolder url="file://$MODULE_DIR$/../../../spring-context/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../spring-context/build" />
-      <excludeFolder url="file://$MODULE_DIR$/../../../spring-context/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

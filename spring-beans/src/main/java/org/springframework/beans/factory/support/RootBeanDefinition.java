@@ -45,7 +45,6 @@ import java.util.function.Supplier;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see GenericBeanDefinition
- * @see ChildBeanDefinition
  */
 @SuppressWarnings("serial")
 public class RootBeanDefinition extends AbstractBeanDefinition {

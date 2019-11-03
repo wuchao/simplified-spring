@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,15 +16,15 @@
 
 package org.springframework.cglib.core;
 
-import org.springframework.asm.ClassVisitor;
-import org.springframework.asm.Label;
-import org.springframework.asm.Type;
-import org.springframework.cglib.core.internal.CustomizerRegistry;
-
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.Collections;
 import java.util.List;
+
+import org.springframework.asm.ClassVisitor;
+import org.springframework.asm.Label;
+import org.springframework.asm.Type;
+import org.springframework.cglib.core.internal.CustomizerRegistry;
 
 /**
  * Generates classes to handle multi-valued keys, for use in things such as Maps and Sets.
@@ -165,7 +165,7 @@ abstract public class KeyFactory {
 	}
 
 	public static KeyFactory create(ClassLoader loader, Class keyInterface, KeyFactoryCustomizer customizer,
-                                    List<KeyFactoryCustomizer> next) {
+			List<KeyFactoryCustomizer> next) {
 		Generator gen = new Generator();
 		gen.setInterface(keyInterface);
 		// SPRING PATCH BEGIN
@@ -208,8 +208,7 @@ abstract public class KeyFactory {
 			return keyInterface.getClassLoader();
 		}
 
-		@Override
-        protected ProtectionDomain getProtectionDomain() {
+		protected ProtectionDomain getProtectionDomain() {
 			return ReflectUtils.getProtectionDomain(keyInterface);
 		}
 
@@ -263,7 +262,7 @@ abstract public class KeyFactory {
 			}
 
 			Type[] parameterTypes = TypeUtils.getTypes(newInstance.getParameterTypes());
-			ce.begin_class(Constants.V1_2,
+			ce.begin_class(Constants.V1_8,
 					Constants.ACC_PUBLIC,
 					getClassName(),
 					KEY_FACTORY,

@@ -896,6 +896,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
         // Allow for caching all bean definition metadata, not expecting further changes.
         beanFactory.freezeConfiguration();
 
+        // 初始化所有非 lazy-init 的单例 Bean
         // Instantiate all remaining (non-lazy-init) singletons.
         beanFactory.preInstantiateSingletons();
     }

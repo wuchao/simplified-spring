@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 
 /**
  * 基于注解配置的 ApplicationContext
+ * 参考：[Spring对注解(Annotation)处理源码分析1——扫描和读取Bean定义](https://blog.csdn.net/chjttony/article/details/6301523)
  * <p>
  * Standalone application context, accepting annotated classes as input - in particular
  * {@link Configuration @Configuration}-annotated classes, but also plain
@@ -49,13 +50,18 @@ import java.util.function.Supplier;
  * @see #scan
  * @see AnnotatedBeanDefinitionReader
  * @see ClassPathBeanDefinitionScanner
- * @see org.springframework.context.support.GenericXmlApplicationContext
  * @since 3.0
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 
+    /**
+     * 创建一个读取注解的 Bean 定义读取器，并将其设置到容器中
+     */
     private final AnnotatedBeanDefinitionReader reader;
 
+    /**
+     * 创建一个扫描指定类路径中注解 Bean 定义的扫描器，并将其设置到容器中
+     */
     private final ClassPathBeanDefinitionScanner scanner;
 
 
@@ -82,18 +88,18 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
     /**
      * 初始化一个基于注解配置的应用上下文，注册包含给定注解的类，刷新应用上下文
      * （此构造方法用在测试类中，是一个完整的 spring application context 初始化过程）
-     *
+     * <p>
      * Create a new AnnotationConfigApplicationContext, deriving bean definitions
      * from the given annotated classes and automatically refreshing the context.
      *
      * @param annotatedClasses one or more annotated classes,
      *                         e.g. {@link Configuration @Configuration} classes
      */
-//    public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
-//        this();
-//        register(annotatedClasses);
-//        refresh();
-//    }
+    public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
+        this();
+        register(annotatedClasses);
+        refresh();
+    }
 
     /**
      * 同上一个构造方法
@@ -157,7 +163,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
     /**
      * 该类的子类 AnnotationConfigWebApplicationContext 重写了该方法
      * 先把给定的 annotatedClasses 添加到一个集合中，再一起注册
-     *
+     * <p>
      * Register one or more annotated classes to be processed.
      * <p>Note that {@link #refresh()} must be called in order for the context
      * to fully process the new classes.

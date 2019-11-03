@@ -159,6 +159,9 @@ public interface BeanFactory {
     <T> T getBean(String name, Class<T> requiredType) throws BeansException;
 
     /**
+     * 该方法重载了 getBean(String name) 方法，
+     * 可变参数主要用来指定是否显示使用静态工厂方法创建一个原型（prototype）Bean
+     * <p>
      * Return an instance, which may be shared or independent, of the specified bean.
      * <p>Allows for specifying explicit constructor arguments / factory method arguments,
      * overriding the specified default arguments (if any) in the bean definition.
@@ -176,6 +179,10 @@ public interface BeanFactory {
     Object getBean(String name, Object... args) throws BeansException;
 
     /**
+     * 根据指定的类型取得 IoC 容器中管理的 Bean，
+     * 该方法根据指定的类型调用 ListableBeanFactory（BeanFactory 下的）中的取得 Bean 方法，
+     * 但是也可能根据给定的类型调用通过名字取得 Bean 的方法
+     * <p>
      * Return the bean instance that uniquely matches the given object type, if any.
      * <p>This method goes into {@link ListableBeanFactory} by-type lookup territory
      * but may also be translated into a conventional by-name lookup based on the name

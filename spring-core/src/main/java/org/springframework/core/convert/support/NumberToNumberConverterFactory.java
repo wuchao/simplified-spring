@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,13 +30,13 @@ import org.springframework.util.NumberUtils;
  *
  * @author Keith Donald
  * @since 3.0
- * @see Byte
- * @see Short
- * @see Integer
- * @see Long
+ * @see java.lang.Byte
+ * @see java.lang.Short
+ * @see java.lang.Integer
+ * @see java.lang.Long
  * @see java.math.BigInteger
- * @see Float
- * @see Double
+ * @see java.lang.Float
+ * @see java.lang.Double
  * @see java.math.BigDecimal
  * @see NumberUtils
  */

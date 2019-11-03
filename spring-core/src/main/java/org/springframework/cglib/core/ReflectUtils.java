@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,30 @@
 
 package org.springframework.cglib.core;
 
-import org.springframework.asm.Attribute;
-import org.springframework.asm.Type;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.asm.Attribute;
+import org.springframework.asm.Type;
 
 /**
  * @version $Id: ReflectUtils.java,v 1.30 2009/01/11 19:47:49 herbyderby Exp $
@@ -430,7 +440,7 @@ public class ReflectUtils {
 			list.addAll(OBJECT_METHODS);
 		}
 		else
-			list.addAll(Arrays.asList(type.getDeclaredMethods()));
+			list.addAll(java.util.Arrays.asList(type.getDeclaredMethods()));
 
 		Class superclass = type.getSuperclass();
 		if (superclass != null) {
@@ -481,7 +491,10 @@ public class ReflectUtils {
 			ProtectionDomain protectionDomain, Class<?> contextClass) throws Exception {
 
 		Class c = null;
-		if (contextClass != null && privateLookupInMethod != null && lookupDefineClassMethod != null) {
+
+		// Preferred option: JDK 9+ Lookup.defineClass API if ClassLoader matches
+		if (contextClass != null && contextClass.getClassLoader() == loader &&
+				privateLookupInMethod != null && lookupDefineClassMethod != null) {
 			try {
 				MethodHandles.Lookup lookup = (MethodHandles.Lookup)
 						privateLookupInMethod.invoke(null, contextClass, MethodHandles.lookup());
@@ -500,29 +513,52 @@ public class ReflectUtils {
 				throw new CodeGenerationException(ex);
 			}
 		}
-		if (protectionDomain == null) {
-			protectionDomain = PROTECTION_DOMAIN;
-		}
-		if (c == null) {
-			if (classLoaderDefineClassMethod != null) {
-				Object[] args = new Object[]{className, b, 0, b.length, protectionDomain};
-				try {
-					if (!classLoaderDefineClassMethod.isAccessible()) {
-						classLoaderDefineClassMethod.setAccessible(true);
-					}
-					c = (Class) classLoaderDefineClassMethod.invoke(loader, args);
+
+		// Classic option: protected ClassLoader.defineClass method
+		if (c == null && classLoaderDefineClassMethod != null) {
+			if (protectionDomain == null) {
+				protectionDomain = PROTECTION_DOMAIN;
+			}
+			Object[] args = new Object[]{className, b, 0, b.length, protectionDomain};
+			try {
+				if (!classLoaderDefineClassMethod.isAccessible()) {
+					classLoaderDefineClassMethod.setAccessible(true);
 				}
-				catch (InvocationTargetException ex) {
-					throw new CodeGenerationException(ex.getTargetException());
-				}
-				catch (Throwable ex) {
+				c = (Class) classLoaderDefineClassMethod.invoke(loader, args);
+			}
+			catch (InvocationTargetException ex) {
+				throw new CodeGenerationException(ex.getTargetException());
+			}
+			catch (Throwable ex) {
+				// Fall through if setAccessible fails with InaccessibleObjectException on JDK 9+
+				// (on the module path and/or with a JVM bootstrapped with --illegal-access=deny)
+				if (!ex.getClass().getName().endsWith("InaccessibleObjectException")) {
 					throw new CodeGenerationException(ex);
 				}
 			}
-			else {
-				throw new CodeGenerationException(THROWABLE);
+		}
+
+		// Fallback option: JDK 9+ Lookup.defineClass API even if ClassLoader does not match
+		if (c == null && contextClass != null && contextClass.getClassLoader() != loader &&
+				privateLookupInMethod != null && lookupDefineClassMethod != null) {
+			try {
+				MethodHandles.Lookup lookup = (MethodHandles.Lookup)
+						privateLookupInMethod.invoke(null, contextClass, MethodHandles.lookup());
+				c = (Class) lookupDefineClassMethod.invoke(lookup, b);
+			}
+			catch (InvocationTargetException ex) {
+				throw new CodeGenerationException(ex.getTargetException());
+			}
+			catch (Throwable ex) {
+				throw new CodeGenerationException(ex);
 			}
 		}
+
+		// No defineClass variant available at all?
+		if (c == null) {
+			throw new CodeGenerationException(THROWABLE);
+		}
+
 		// Force static initializers to run.
 		Class.forName(className, true, loader);
 		return c;

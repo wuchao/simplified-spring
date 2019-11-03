@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -69,7 +69,7 @@ public interface NamespaceHandler {
 	 * @return the primary {@code BeanDefinition} (can be {@code null} as explained above)
 	 */
 	@Nullable
-    BeanDefinition parse(Element element, ParserContext parserContext);
+	BeanDefinition parse(Element element, ParserContext parserContext);
 
 	/**
 	 * Parse the specified {@link Node} and decorate the supplied
@@ -91,6 +91,6 @@ public interface NamespaceHandler {
 	 * treated like the case where the original bean definition gets returned.
 	 */
 	@Nullable
-    BeanDefinitionHolder decorate(Node source, BeanDefinitionHolder definition, ParserContext parserContext);
+	BeanDefinitionHolder decorate(Node source, BeanDefinitionHolder definition, ParserContext parserContext);
 
 }

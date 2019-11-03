@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -67,7 +67,7 @@ import org.w3c.dom.NamedNodeMap;
  * is limited to populating the created bean definition with property values.
  * if you want to parse constructor arguments and nested elements from the
  * supplied XML element, then you will have to implement the
- * {@link #postProcess(org.springframework.beans.factory.support.BeanDefinitionBuilder, org.w3c.dom.Element)}
+ * {@link #postProcess(org.springframework.beans.factory.support.BeanDefinitionBuilder, Element)}
  * method and do such parsing yourself, or (more likely) subclass the
  * {@link AbstractSingleBeanDefinitionParser} or {@link AbstractBeanDefinitionParser}
  * classes directly.
@@ -95,7 +95,7 @@ import org.w3c.dom.NamedNodeMap;
  * usage thus illustrated holds true for any number of attributes).
  * All that the {@code PropertiesBeanDefinitionParser} needs
  * actually do is supply an implementation of the
- * {@link #getBeanClass(org.w3c.dom.Element)} method to return the
+ * {@link #getBeanClass(Element)} method to return the
  * {@code PropertiesFactoryBean} type.
  *
  * @author Rob Harrop

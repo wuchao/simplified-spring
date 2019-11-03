@@ -76,16 +76,23 @@ public class AnnotationScopeMetadataResolver implements ScopeMetadataResolver {
         this.scopeAnnotationType = scopeAnnotationType;
     }
 
-
+    /**
+     * 解析注解 Bean 定义类中的作用域元信息
+     *
+     * @param definition the target bean definition
+     * @return
+     */
     @Override
     public ScopeMetadata resolveScopeMetadata(BeanDefinition definition) {
         ScopeMetadata metadata = new ScopeMetadata();
         if (definition instanceof AnnotatedBeanDefinition) {
             AnnotatedBeanDefinition annDef = (AnnotatedBeanDefinition) definition;
+            // 从注解 Bean 定义类的属性中查找属性为“Scope”的值，即 @Scope 注解的值
             AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(
                     annDef.getMetadata(), this.scopeAnnotationType);
             if (attributes != null) {
                 metadata.setScopeName(attributes.getString("value"));
+                // 获取 @Scope 注解中的 proxyMode 属性值，在创建代理对象时会用到
                 ScopedProxyMode proxyMode = attributes.getEnum("proxyMode");
                 if (proxyMode == ScopedProxyMode.DEFAULT) {
                     proxyMode = this.defaultProxyMode;

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,18 +16,46 @@
 
 package org.springframework.cglib.proxy;
 
-import org.springframework.asm.ClassVisitor;
-import org.springframework.asm.Label;
-import org.springframework.asm.Type;
-import org.springframework.cglib.core.*;
-
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.asm.ClassVisitor;
+import org.springframework.asm.Label;
+import org.springframework.asm.Type;
+import org.springframework.cglib.core.AbstractClassGenerator;
+import org.springframework.cglib.core.ClassEmitter;
+import org.springframework.cglib.core.CodeEmitter;
+import org.springframework.cglib.core.CodeGenerationException;
+import org.springframework.cglib.core.CollectionUtils;
+import org.springframework.cglib.core.Constants;
+import org.springframework.cglib.core.DuplicatesPredicate;
+import org.springframework.cglib.core.EmitUtils;
+import org.springframework.cglib.core.KeyFactory;
+import org.springframework.cglib.core.Local;
+import org.springframework.cglib.core.MethodInfo;
+import org.springframework.cglib.core.MethodInfoTransformer;
+import org.springframework.cglib.core.MethodWrapper;
+import org.springframework.cglib.core.ObjectSwitchCallback;
+import org.springframework.cglib.core.ProcessSwitchCallback;
+import org.springframework.cglib.core.ReflectUtils;
+import org.springframework.cglib.core.RejectModifierPredicate;
+import org.springframework.cglib.core.Signature;
+import org.springframework.cglib.core.Transformer;
+import org.springframework.cglib.core.TypeUtils;
+import org.springframework.cglib.core.VisibilityPredicate;
+import org.springframework.cglib.core.WeakCacheKey;
 
 /**
  * Generates dynamic subclasses to enable method interception. This
@@ -175,12 +203,12 @@ public class Enhancer extends AbstractClassGenerator {
 	public interface EnhancerKey {
 
 		public Object newInstance(String type,
-                                  String[] interfaces,
-                                  WeakCacheKey<CallbackFilter> filter,
-                                  Type[] callbackTypes,
-                                  boolean useFactory,
-                                  boolean interceptDuringConstruction,
-                                  Long serialVersionUID);
+				String[] interfaces,
+				WeakCacheKey<CallbackFilter> filter,
+				Type[] callbackTypes,
+				boolean useFactory,
+				boolean interceptDuringConstruction,
+				Long serialVersionUID);
 	}
 
 
@@ -554,6 +582,7 @@ public class Enhancer extends AbstractClassGenerator {
 		return super.generate(data);
 	}
 
+	@Override
 	protected ClassLoader getDefaultClassLoader() {
 		if (superclass != null) {
 			return superclass.getClassLoader();
@@ -567,7 +596,7 @@ public class Enhancer extends AbstractClassGenerator {
 	}
 
 	@Override
-    protected ProtectionDomain getProtectionDomain() {
+	protected ProtectionDomain getProtectionDomain() {
 		if (superclass != null) {
 			return ReflectUtils.getProtectionDomain(superclass);
 		}
@@ -656,7 +685,7 @@ public class Enhancer extends AbstractClassGenerator {
 
 		ClassEmitter e = new ClassEmitter(v);
 		if (currentData == null) {
-			e.begin_class(Constants.V1_2,
+			e.begin_class(Constants.V1_8,
 					Constants.ACC_PUBLIC,
 					getClassName(),
 					Type.getType(sc),
@@ -666,7 +695,7 @@ public class Enhancer extends AbstractClassGenerator {
 					Constants.SOURCE_FILE);
 		}
 		else {
-			e.begin_class(Constants.V1_2,
+			e.begin_class(Constants.V1_8,
 					Constants.ACC_PUBLIC,
 					getClassName(),
 					null,
@@ -735,7 +764,7 @@ public class Enhancer extends AbstractClassGenerator {
 
 	/**
 	 * This method should not be called in regular flow.
-	 * Technically speaking {@link #wrapCachedClass(Class)} uses {@link EnhancerFactoryData} as a cache value,
+	 * Technically speaking {@link #wrapCachedClass(Class)} uses {@link Enhancer.EnhancerFactoryData} as a cache value,
 	 * and the latter enables faster instantiation than plain old reflection lookup and invoke.
 	 * This method is left intact for backward compatibility reasons: just in case it was ever used.
 	 * @param type class to instantiate
@@ -1021,11 +1050,13 @@ public class Enhancer extends AbstractClassGenerator {
 		e.load_this();
 		e.load_arg(0);
 		e.process_switch(keys, new ProcessSwitchCallback() {
+			@Override
 			public void processCase(int key, Label end) {
 				e.getfield(getCallbackField(key));
 				e.goTo(end);
 			}
 
+			@Override
 			public void processDefault() {
 				e.pop(); // stack height
 				e.aconst_null();
@@ -1039,6 +1070,7 @@ public class Enhancer extends AbstractClassGenerator {
 		final CodeEmitter e = ce.begin_method(Constants.ACC_PUBLIC, SET_CALLBACK, null);
 		e.load_arg(0);
 		e.process_switch(keys, new ProcessSwitchCallback() {
+			@Override
 			public void processCase(int key, Label end) {
 				e.load_this();
 				e.load_arg(1);
@@ -1047,6 +1079,7 @@ public class Enhancer extends AbstractClassGenerator {
 				e.goTo(end);
 			}
 
+			@Override
 			public void processDefault() {
 				// TODO: error?
 			}
@@ -1091,7 +1124,7 @@ public class Enhancer extends AbstractClassGenerator {
 		CodeEmitter e = ce.begin_method(Constants.ACC_PUBLIC, NEW_INSTANCE, null);
 		Type thisType = getThisType(e);
 		e.load_arg(0);
-		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS, false);
 		emitCommonNewInstance(e);
 	}
 
@@ -1110,7 +1143,7 @@ public class Enhancer extends AbstractClassGenerator {
 		e.dup();
 		e.invoke_constructor(thisType);
 		e.aconst_null();
-		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS, false);
 		e.return_value();
 		e.end_method();
 	}
@@ -1129,7 +1162,7 @@ public class Enhancer extends AbstractClassGenerator {
 				e.push(0);
 				e.load_arg(0);
 				e.aastore();
-				e.invoke_static(getThisType(e), SET_THREAD_CALLBACKS);
+				e.invoke_static(getThisType(e), SET_THREAD_CALLBACKS, false);
 				break;
 			default:
 				e.throw_exception(ILLEGAL_STATE_EXCEPTION, "More than one callback object required");
@@ -1141,7 +1174,7 @@ public class Enhancer extends AbstractClassGenerator {
 		final CodeEmitter e = ce.begin_method(Constants.ACC_PUBLIC, MULTIARG_NEW_INSTANCE, null);
 		final Type thisType = getThisType(e);
 		e.load_arg(2);
-		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS, false);
 		e.new_instance(thisType);
 		e.dup();
 		e.load_arg(0);
@@ -1164,7 +1197,7 @@ public class Enhancer extends AbstractClassGenerator {
 			}
 		});
 		e.aconst_null();
-		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS, false);
 		e.return_value();
 		e.end_method();
 	}
@@ -1278,6 +1311,7 @@ public class Enhancer extends AbstractClassGenerator {
 				}
 			}
 
+			@Override
 			public CodeEmitter beginMethod(ClassEmitter ce, MethodInfo method) {
 				CodeEmitter e = EmitUtils.begin_method(ce, method);
 				if (!interceptDuringConstruction &&

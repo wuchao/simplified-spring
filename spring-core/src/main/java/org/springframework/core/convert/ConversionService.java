@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,20 +19,6 @@ package org.springframework.core.convert;
 import org.springframework.lang.Nullable;
 
 /**
- * [Spring 学习记录3 ConversionService](https://www.cnblogs.com/abcwt112/p/7447435.html)
- *
- * 1.Spring使用ConversionService来convert各种类型.默认提供的是DefaultConversionService.同时它实现了ConverterRegistry接口,所以也可以添加你自定义的converter.
- *
- * 2.Spring提供了3种converter接口,分别是Converter,ConverterFactory和GenericConverter.一般用于1:1, 1:N, N:N的source->target类型转化.
- *
- * 3.在DefaultConversionService内部3种converter都会转化成GenericConverter放到静态内部类Converters中.
- *
- * 4.接口ConvertiblePair是source的class与target的Class的封装.静态内部类ConvertersForPair是多个converter对应的LinkedList的封装..静态内部类Converters中含有1个Map<ConvertiblePair, ConvertersForPair>用来储存所有converter.
- *
- * 1个GenericConverter可以对应N个ConvertiblePair,1个ConvertiblePair对应的ConvertersForPair中也可以有N个GenericConverter.
- *
- *
- *
  * A service interface for type conversion. This is the entry point into the convert system.
  * Call {@link #convert(Object, Class)} to perform a thread-safe type conversion using this system.
  *

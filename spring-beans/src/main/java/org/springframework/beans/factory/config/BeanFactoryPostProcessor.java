@@ -40,7 +40,6 @@ import org.springframework.beans.BeansException;
  * @author Juergen Hoeller
  * @since 06.07.2003
  * @see BeanPostProcessor
- * @see PropertyResourceConfigurer
  */
 @FunctionalInterface
 public interface BeanFactoryPostProcessor {

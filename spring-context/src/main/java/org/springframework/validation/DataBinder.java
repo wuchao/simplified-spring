@@ -686,7 +686,6 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	}
 
 	@Nullable
-	@Override
 	public <T> T convertIfNecessary(@Nullable Object value, @Nullable Class<T> requiredType,
                                     @Nullable TypeDescriptor typeDescriptor) throws TypeMismatchException {
 

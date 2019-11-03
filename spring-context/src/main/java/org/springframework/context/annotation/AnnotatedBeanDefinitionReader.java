@@ -48,11 +48,24 @@ import java.util.function.Supplier;
 public class AnnotatedBeanDefinitionReader {
 
     private final BeanDefinitionRegistry registry;
-
+    /**
+     * bean 名称的生成策略
+     */
     private BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
 
+    /**
+     * 决定 bean 实例的范围（即生命周期）的。
+     * 常见的生命周期有四种，PROTOTYPE（原型）、SINGLETON（单例）、REQUEST（请求）、SESSION（会话）。
+     * 就是通过检查类上有没有 @Scope 这个注解。如果有的话，就按指定的走，没有的话，就按单例（默认）走。
+     */
     private ScopeMetadataResolver scopeMetadataResolver = new AnnotationScopeMetadataResolver();
 
+    /**
+     * 根据“条件”判断一个 bean 定义该不该被注册。
+     * 这可是 SpringBoot 自动配置（AutoConfiguration）的基石啊。
+     * 就是去检测类上有没有标 @Conditional 这个注解。如果没有的话，bean 定义会被注册。
+     * 如果有的话，需要再去计算具体的“条件”，然后才能确定 bean 定义到底要不要注册。
+     */
     private ConditionEvaluator conditionEvaluator;
 
 
@@ -224,6 +237,8 @@ public class AnnotatedBeanDefinitionReader {
                             @Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
 
         AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
+
+        // @Conditional 装配条件判断是否需要跳过注册
         if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
             return;
         }
@@ -233,10 +248,14 @@ public class AnnotatedBeanDefinitionReader {
         // Bean 的作用域和代理模式
         ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
         abd.setScope(scopeMetadata.getScopeName());
+
+        // bean 的名称
         String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
+        // 处理定义的公共注解信息
         AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 
+        // 处理限定修饰符，就是 @Primary、@Lazy、@Qualifier 这三个注解。
         if (qualifiers != null) {
             for (Class<? extends Annotation> qualifier : qualifiers) {
                 if (Primary.class == qualifier) {
@@ -249,12 +268,17 @@ public class AnnotatedBeanDefinitionReader {
             }
         }
 
+        // 应用 bean 定义自定义器，对 bean 定义进行一些自定义
         for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
             customizer.customize(abd);
         }
 
         BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+        // 根据 bean 的生命周期，使用 AOP 技术为该 bean 定义生成代理。
         definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+        // 把这个 bean 定义注册到容器中。
+        // BeanDefinitionReaderUtils.registerBeanDefinition 内部通过 DefaultListableBeanFactory.registerBeanDefinition(String beanName, BeanDefinition beanDefinition) 按名称将 bean 定义信息注册到容器中，
+        // 实际上 DefaultListableBeanFactory 内部维护一个 Map<String, BeanDefinition> 类型变量 beanDefinitionMap，用于保存注 bean 定义信息（beanname 和 beandefine 映射）
         BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
     }
 
