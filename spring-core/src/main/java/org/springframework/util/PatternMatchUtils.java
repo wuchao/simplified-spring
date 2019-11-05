@@ -28,11 +28,13 @@ import org.springframework.lang.Nullable;
 public abstract class PatternMatchUtils {
 
 	/**
+	 * 通配符匹配
 	 * Match a String against the given pattern, supporting the following simple
 	 * pattern styles: "xxx*", "*xxx", "*xxx*" and "xxx*yyy" matches (with an
 	 * arbitrary number of pattern parts), as well as direct equality.
+	 *
 	 * @param pattern the pattern to match against
-	 * @param str the String to match
+	 * @param str     the String to match
 	 * @return whether the String matches the given pattern
 	 */
 	public static boolean simpleMatch(@Nullable String pattern, @Nullable String str) {
@@ -43,23 +45,34 @@ public abstract class PatternMatchUtils {
 		if (firstIndex == -1) {
 			return pattern.equals(str);
 		}
+		// pattern 以 * 开头
 		if (firstIndex == 0) {
+			// 如果 pattern 等于 * ，则返回 true
 			if (pattern.length() == 1) {
 				return true;
 			}
+			// 匹配第二个 * 的 index
 			int nextIndex = pattern.indexOf('*', firstIndex + 1);
+			// 没有匹配到第二个 *
 			if (nextIndex == -1) {
+				// 则判断 str 是否是以 pattern 中 * 后面的字符串结尾的
 				return str.endsWith(pattern.substring(1));
 			}
+			// 截取 pattern 中两个 * 的中间部分
 			String part = pattern.substring(1, nextIndex);
+			// 两个 * 中间部分是空字符串
 			if (part.isEmpty()) {
+				// 则用第二个 * 及其后面的部分再和 str 继续匹配
 				return simpleMatch(pattern.substring(nextIndex), str);
 			}
 			int partIndex = str.indexOf(part);
+			//// TODO：？？？？？？
 			while (partIndex != -1) {
+				// if(simpleMatch(*, str.substring(nextIndex + 1)))
 				if (simpleMatch(pattern.substring(nextIndex), str.substring(partIndex + part.length()))) {
 					return true;
 				}
+				// str 中下一个匹配 part 的索引
 				partIndex = str.indexOf(part, partIndex + 1);
 			}
 			return false;
@@ -73,8 +86,9 @@ public abstract class PatternMatchUtils {
 	 * Match a String against the given patterns, supporting the following simple
 	 * pattern styles: "xxx*", "*xxx", "*xxx*" and "xxx*yyy" matches (with an
 	 * arbitrary number of pattern parts), as well as direct equality.
+	 *
 	 * @param patterns the patterns to match against
-	 * @param str the String to match
+	 * @param str      the String to match
 	 * @return whether the String matches any of the given patterns
 	 */
 	public static boolean simpleMatch(@Nullable String[] patterns, String str) {

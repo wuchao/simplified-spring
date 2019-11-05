@@ -932,7 +932,9 @@ public abstract class ClassUtils {
 		if (nameEndIndex == -1) {
 			nameEndIndex = className.length();
 		}
+		// 获取类名
 		String shortName = className.substring(lastDotIndex + 1, nameEndIndex);
+		// 若为内部类，则将内部类类名的 $ 符号转换为 .
 		shortName = shortName.replace(INNER_CLASS_SEPARATOR, PACKAGE_SEPARATOR);
 		return shortName;
 	}

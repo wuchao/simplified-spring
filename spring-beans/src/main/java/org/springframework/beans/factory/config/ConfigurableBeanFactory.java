@@ -19,150 +19,156 @@ import java.security.AccessControlContext;
  */
 public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
 
+	/**
+	 * 单例
+	 */
+	String SCOPE_SINGLETON = "singleton";
 
-    String SCOPE_SINGLETON = "singleton";
+	/**
+	 * 原型
+	 */
+	String SCOPE_PROTOTYPE = "prototype";
 
-    String SCOPE_PROTOTYPE = "prototype";
 
+	void setParentBeanFactory(BeanFactory parentBeanFactory);
 
-    void setParentBeanFactory(BeanFactory parentBeanFactory);
+	void setBeanClassLoader(@Nullable ClassLoader beanClassLoader);
 
-    void setBeanClassLoader(@Nullable ClassLoader beanClassLoader);
 
+	@Nullable
+	ClassLoader getBeanClassLoader();
 
-    @Nullable
-    ClassLoader getBeanClassLoader();
 
+	void setTempClassLoader(@Nullable ClassLoader tempClassLoader);
 
-    void setTempClassLoader(@Nullable ClassLoader tempClassLoader);
 
+	@Nullable
+	ClassLoader getTempClassLoader();
 
-    @Nullable
-    ClassLoader getTempClassLoader();
 
+	void setCacheBeanMetadata(boolean cacheBeanMetadata);
 
-    void setCacheBeanMetadata(boolean cacheBeanMetadata);
 
+	boolean isCacheBeanMetadata();
 
-    boolean isCacheBeanMetadata();
 
+	/**
+	 * SpEL 表达式解析器
+	 *
+	 * @param resolver
+	 */
+	void setBeanExpressionResolver(@Nullable BeanExpressionResolver resolver);
 
-    /**
-     * SpEL 表达式解析器
-     *
-     * @param resolver
-     */
-    void setBeanExpressionResolver(@Nullable BeanExpressionResolver resolver);
 
+	@Nullable
+	BeanExpressionResolver getBeanExpressionResolver();
 
-    @Nullable
-    BeanExpressionResolver getBeanExpressionResolver();
 
+	/**
+	 * 类型转换
+	 *
+	 * @param conversionService
+	 */
+	void setConversionService(@Nullable ConversionService conversionService);
 
-    /**
-     * 类型转换
-     *
-     * @param conversionService
-     */
-    void setConversionService(@Nullable ConversionService conversionService);
 
+	@Nullable
+	ConversionService getConversionService();
 
-    @Nullable
-    ConversionService getConversionService();
 
+	void addPropertyEditorRegistrar(PropertyEditorRegistrar registrar);
 
-    void addPropertyEditorRegistrar(PropertyEditorRegistrar registrar);
 
+	/**
+	 * 属性编辑器可以将String对象转换成java对象
+	 * <p>
+	 * [SpringMVC类型转换、数据绑定](https://www.cnblogs.com/Leo_wl/p/3764937.html)
+	 *
+	 * @param requiredType
+	 * @param propertyEditorClass
+	 */
+	void registerCustomEditor(Class<?> requiredType, Class<? extends PropertyEditor> propertyEditorClass);
 
-    /**
-     * 属性编辑器可以将String对象转换成java对象
-     *
-     * [SpringMVC类型转换、数据绑定](https://www.cnblogs.com/Leo_wl/p/3764937.html)
-     *
-     * @param requiredType
-     * @param propertyEditorClass
-     */
-    void registerCustomEditor(Class<?> requiredType, Class<? extends PropertyEditor> propertyEditorClass);
 
+	void copyRegisteredEditorsTo(PropertyEditorRegistry registry);
 
-    void copyRegisteredEditorsTo(PropertyEditorRegistry registry);
 
+	void setTypeConverter(TypeConverter typeConverter);
 
-    void setTypeConverter(TypeConverter typeConverter);
 
+	/**
+	 * 可以将一个类型转换成另一个类型
+	 *
+	 * @return
+	 */
+	TypeConverter getTypeConverter();
 
-    /**
-     * 可以将一个类型转换成另一个类型
-     * @return
-     */
-    TypeConverter getTypeConverter();
 
+	void addEmbeddedValueResolver(StringValueResolver valueResolver);
 
-    void addEmbeddedValueResolver(StringValueResolver valueResolver);
 
+	boolean hasEmbeddedValueResolver();
 
-    boolean hasEmbeddedValueResolver();
 
+	@Nullable
+	String resolveEmbeddedValue(String value);
 
-    @Nullable
-    String resolveEmbeddedValue(String value);
 
+	void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
-    void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
+	int getBeanPostProcessorCount();
 
-    int getBeanPostProcessorCount();
 
+	void registerScope(String scopeName, Scope scope);
 
-    void registerScope(String scopeName, Scope scope);
 
+	String[] getRegisteredScopeNames();
 
-    String[] getRegisteredScopeNames();
 
+	@Nullable
+	Scope getRegisteredScope(String scopeName);
 
-    @Nullable
-    Scope getRegisteredScope(String scopeName);
 
+	AccessControlContext getAccessControlContext();
 
-    AccessControlContext getAccessControlContext();
 
+	void copyConfigurationFrom(ConfigurableBeanFactory otherFactory);
 
-    void copyConfigurationFrom(ConfigurableBeanFactory otherFactory);
 
+	void registerAlias(String beanName, String alias) throws BeanDefinitionStoreException;
 
-    void registerAlias(String beanName, String alias) throws BeanDefinitionStoreException;
 
+	void resolveAliases(StringValueResolver valueResolver);
 
-    void resolveAliases(StringValueResolver valueResolver);
 
+	BeanDefinition getMergedBeanDefinition(String beanName) throws NoSuchBeanDefinitionException;
 
-    BeanDefinition getMergedBeanDefinition(String beanName) throws NoSuchBeanDefinitionException;
 
+	boolean isFactoryBean(String name) throws NoSuchBeanDefinitionException;
 
-    boolean isFactoryBean(String name) throws NoSuchBeanDefinitionException;
 
+	void setCurrentlyInCreation(String beanName, boolean inCreation);
 
-    void setCurrentlyInCreation(String beanName, boolean inCreation);
 
+	boolean isCurrentlyInCreation(String beanName);
 
-    boolean isCurrentlyInCreation(String beanName);
 
+	void registerDependentBean(String beanName, String dependentBeanName);
 
-    void registerDependentBean(String beanName, String dependentBeanName);
 
+	String[] getDependentBeans(String beanName);
 
-    String[] getDependentBeans(String beanName);
 
+	String[] getDependenciesForBean(String beanName);
 
-    String[] getDependenciesForBean(String beanName);
 
+	void destroyBean(String beanName, Object beanInstance);
 
-    void destroyBean(String beanName, Object beanInstance);
 
+	void destroyScopedBean(String beanName);
 
-    void destroyScopedBean(String beanName);
 
-
-    void destroySingletons();
+	void destroySingletons();
 
 }
