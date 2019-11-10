@@ -13,7 +13,8 @@ public class AnnotationConfigApplicationContextTests {
 
 		Object object = context.getBean(UserService.class);
 		if (object instanceof UserService) {
-			System.out.println(((UserService) object).welcome());
+			UserService userService = (UserService) object;
+			System.out.println(userService.welcome() + userService.getCompanyName());
 		}
 	}
 

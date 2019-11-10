@@ -16,12 +16,12 @@
 
 package org.springframework.beans.factory;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
-
 import org.springframework.beans.BeansException;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
+
+import java.lang.annotation.Annotation;
+import java.util.Map;
 
 /**
  * Extension of the {@link BeanFactory} interface to be implemented by bean factories
@@ -48,45 +48,67 @@ import org.springframework.lang.Nullable;
  * <p><b>NOTE:</b> With the exception of {@code getBeanDefinitionCount}
  * and {@code containsBeanDefinition}, the methods in this interface
  * are not designed for frequent invocation. Implementations may be slow.
- *
  */
 public interface ListableBeanFactory extends BeanFactory {
 
+	/**
+	 * 判断传入的 beanName 是否在 BeanFactory 中被定义
+	 *
+	 * @param beanName
+	 * @return
+	 */
+	boolean containsBeanDefinition(String beanName);
 
-    boolean containsBeanDefinition(String beanName);
+	/**
+	 * 返回 BeanFactory 中的定义定义了的 Bean 的个数
+	 *
+	 * @return
+	 */
+	int getBeanDefinitionCount();
+
+	/**
+	 * 返回 BeanFactory 中定义了的 Bean 的名字
+	 *
+	 * @return
+	 */
+	String[] getBeanDefinitionNames();
+
+	/**
+	 * 返回与传入的类型（type）（包括子类）匹配的 Bean 的名称，从 Bean 定义或 FactoryBeans 的 getObjectType 值判断
+	 *
+	 * @param type
+	 * @return
+	 */
+	String[] getBeanNamesForType(ResolvableType type);
+
+	/**
+	 * 返回对于指定类型 Bean（包括子类）的所有名字
+	 *
+	 * @param type
+	 * @return
+	 */
+	String[] getBeanNamesForType(@Nullable Class<?> type);
 
 
-    int getBeanDefinitionCount();
+	String[] getBeanNamesForType(@Nullable Class<?> type, boolean includeNonSingletons, boolean allowEagerInit);
 
 
-    String[] getBeanDefinitionNames();
+	<T> Map<String, T> getBeansOfType(@Nullable Class<T> type) throws BeansException;
 
 
-    String[] getBeanNamesForType(ResolvableType type);
+	<T> Map<String, T> getBeansOfType(@Nullable Class<T> type, boolean includeNonSingletons, boolean allowEagerInit)
+			throws BeansException;
 
 
-    String[] getBeanNamesForType(@Nullable Class<?> type);
+	String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType);
 
 
-    String[] getBeanNamesForType(@Nullable Class<?> type, boolean includeNonSingletons, boolean allowEagerInit);
+	Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) throws BeansException;
 
 
-    <T> Map<String, T> getBeansOfType(@Nullable Class<T> type) throws BeansException;
-
-
-    <T> Map<String, T> getBeansOfType(@Nullable Class<T> type, boolean includeNonSingletons, boolean allowEagerInit)
-            throws BeansException;
-
-
-    String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType);
-
-
-    Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) throws BeansException;
-
-
-    @Nullable
-    <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType)
-            throws NoSuchBeanDefinitionException;
+	@Nullable
+	<A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType)
+			throws NoSuchBeanDefinitionException;
 
 }
 
