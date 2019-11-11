@@ -260,7 +260,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		// 扫描给定包
 		doScan(basePackages);
 
-		// 注册注解配置（Annotation config）处理器
+		// 注册注解配置处理器（Annotation config processors）
 		// Register annotation config processors, if necessary.
 		if (this.includeAnnotationConfig) {
 			AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
@@ -289,7 +289,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 			// 调用父类 ClassPathScanningCandidateComponentProvider 的方法
 			// 扫描给定类路径，获取符合条件的 Bean 定义
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
-			// 遍历扫描到的 Bean
+			// 遍历扫描到的 BeanDefinition
 			for (BeanDefinition candidate : candidates) {
 				// 获取 Bean 定义类中 @Scope 注解的值，即获取 Bean 的作用域
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);

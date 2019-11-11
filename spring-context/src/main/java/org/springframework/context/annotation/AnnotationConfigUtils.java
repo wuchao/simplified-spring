@@ -141,6 +141,7 @@ public abstract class AnnotationConfigUtils {
 	}
 
 	/**
+	 * 为给定的 BeanDefinitionRegistry 对象注册所有相关的 annotation config processors
 	 * Register all relevant annotation post processors in the given registry.
 	 *
 	 * @param registry the registry to operate on
@@ -152,6 +153,7 @@ public abstract class AnnotationConfigUtils {
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
 
+		// 根据 BeanDefinitionRegistry 对象获取到 DefaultListableBeanFactory 对象
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
