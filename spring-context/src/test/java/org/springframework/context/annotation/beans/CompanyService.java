@@ -9,7 +9,4 @@ public class CompanyService {
 		return "kshx";
 	}
 
-	public String toString() {
-		return "This is CompanyService.";
-	}
 }

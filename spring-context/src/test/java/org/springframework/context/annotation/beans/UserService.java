@@ -9,12 +9,12 @@ public class UserService {
 	@Autowired
 	private CompanyService companyService;
 
-	public String getCompanyName(){
+	public String getCompanyName() {
 		return companyService.getCompanyName();
 	}
 
-    public String welcome() {
-        return "This is UserService.";
-    }
+	public String welcome() {
+		return "welcome ";
+	}
 
 }
