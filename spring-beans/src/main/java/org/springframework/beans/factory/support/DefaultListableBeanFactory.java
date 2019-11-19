@@ -884,7 +884,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		// 检查是否有同名的 BeanDefinition 已经在 IoC 容器中注册，
-		// 如果已经注册，并且不允许覆盖已注册的 Bean，则抛出注册失败异常
+		// 如果已经注册，并且不允许覆盖已注册的 BeanDefinition，则抛出注册失败异常
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		// 同名的 BeanDefinition 在容器中已存在
 		if (existingDefinition != null) {

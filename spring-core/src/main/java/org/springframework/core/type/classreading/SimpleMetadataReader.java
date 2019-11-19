@@ -52,16 +52,15 @@ final class SimpleMetadataReader implements MetadataReader {
 		ClassReader classReader;
 		try {
 			classReader = new ClassReader(is);
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			throw new NestedIOException("ASM ClassReader failed to parse class file - " +
 					"probably due to a new Java class file version that isn't supported yet: " + resource, ex);
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 
 		AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor(classLoader);
+		// 使用 ASM 获取 class 信息
 		classReader.accept(visitor, ClassReader.SKIP_DEBUG);
 
 		this.annotationMetadata = visitor;

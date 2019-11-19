@@ -302,7 +302,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				 * 如果这个类是 AbstractBeanDefinition 类型
 				 * 则为他设置默认值，比如 lazy/init/destroy
 				 *
-				 * 通过扫描出来的 bd 是 ScannedGenericBeanDefinition，实现了 AbstractBeanDefinition
+				 * 通过扫描出来的 bd 是 ScannedGenericBeanDefinition，实现了 AnnotatedBeanDefinition
 				 */
 				if (candidate instanceof AbstractBeanDefinition) {
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
