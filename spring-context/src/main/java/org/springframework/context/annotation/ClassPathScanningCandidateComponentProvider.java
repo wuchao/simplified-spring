@@ -397,6 +397,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			for (String type : types) {
 				MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(type);
 				if (isCandidateComponent(metadataReader)) {
+					// AnnotatedGenericBeanDefinition 是一个 AnnotatedBeanDefinition
 					AnnotatedGenericBeanDefinition sbd = new AnnotatedGenericBeanDefinition(
 							metadataReader.getAnnotationMetadata());
 					if (isCandidateComponent(sbd)) {
@@ -443,6 +444,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 						// 如果扫描到的类符合容器配置的过滤规则
 						if (isCandidateComponent(metadataReader)) {
 							// 通过汇编（ASM）读取资源字节码中的 Bean 定义元信息
+							// ScannedGenericBeanDefinition 是一个 AnnotatedBeanDefinition
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							// 设置 Bean 定义来源于 resource
 							sbd.setResource(resource);

@@ -97,7 +97,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	@Nullable
 	protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
 		AnnotationMetadata amd = annotatedDef.getMetadata();
-		// 获取 Bean 上所有注解类的全限定名
+		// 获取 Bean 上所有注解名称
 		Set<String> types = amd.getAnnotationTypes();
 		String beanName = null;
 		for (String type : types) {
@@ -158,6 +158,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	}
 
 	/**
+	 * 构造默认的 bean 名称
 	 * Derive a default bean name from the given bean definition.
 	 * <p>The default implementation simply builds a decapitalized version
 	 * of the short class name: e.g. "mypackage.MyJdbcDao" -> "myJdbcDao".

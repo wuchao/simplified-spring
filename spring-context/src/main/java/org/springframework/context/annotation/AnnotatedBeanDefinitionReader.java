@@ -236,6 +236,7 @@ public class AnnotatedBeanDefinitionReader {
     <T> void doRegisterBean(Class<T> annotatedClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
                             @Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
 
+    	// 获取 bean 的注解信息
         AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
 
         // @Conditional 装配条件判断是否需要跳过注册
@@ -278,7 +279,7 @@ public class AnnotatedBeanDefinitionReader {
         definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
         // 把这个 bean 定义注册到容器中。
         // BeanDefinitionReaderUtils.registerBeanDefinition 内部通过 DefaultListableBeanFactory.registerBeanDefinition(String beanName, BeanDefinition beanDefinition) 按名称将 bean 定义信息注册到容器中，
-        // 实际上 DefaultListableBeanFactory 内部维护一个 Map<String, BeanDefinition> 类型变量 beanDefinitionMap，用于保存注 bean 定义信息（beanname 和 beandefine 映射）
+        // 实际上 DefaultListableBeanFactory 内部维护一个 Map<String, BeanDefinition> 类型变量 beanDefinitionMap，用于保存注 bean 定义信息（beanName 和 beanDefinition 映射）
         BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
     }
 
