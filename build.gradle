@@ -467,3 +467,9 @@ configure(rootProject) {
 		}
 	}
 }
+
+// 在 console 里输入 gradle wrapper 命令，生成 gradle/wrapper 目录 
+wrapper {
+	// gradleVersion = '4.9' // spring_boot_version=2.1.4.RELEASE
+	gradleVersion = '5.6' // spring_boot_version=2.2.5.RELEASE
+}
