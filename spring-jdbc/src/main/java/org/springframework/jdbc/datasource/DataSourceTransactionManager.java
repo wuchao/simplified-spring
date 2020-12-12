@@ -129,6 +129,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	}
 
 	/**
+	 * 创建一个 DataSourceTransactionManager 实例，设置数据源
 	 * Create a new DataSourceTransactionManager instance.
 	 * @param dataSource the JDBC DataSource to manage transactions for
 	 */
@@ -235,7 +236,9 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 	@Override
 	protected Object doGetTransaction() {
+		// 创建 DataSource 事务对象
 		DataSourceTransactionObject txObject = new DataSourceTransactionObject();
+		// 如果是嵌套事务传播类型，则将 savepointAllowed 设置为 true
 		txObject.setSavepointAllowed(isNestedTransactionAllowed());
 		ConnectionHolder conHolder =
 				(ConnectionHolder) TransactionSynchronizationManager.getResource(obtainDataSource());
@@ -264,6 +267,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 				if (logger.isDebugEnabled()) {
 					logger.debug("Acquired Connection [" + newCon + "] for JDBC transaction");
 				}
+				// 事务对象设置连接的句柄
 				txObject.setConnectionHolder(new ConnectionHolder(newCon), true);
 			}
 
@@ -292,6 +296,8 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 				txObject.getConnectionHolder().setTimeoutInSeconds(timeout);
 			}
 
+			// 绑定数据库连接到当前线程，这里的 key 是 dataSource
+			// 所以如果事务中换了 dataSource 那事务就不生效了
 			// Bind the connection holder to the thread.
 			if (txObject.isNewConnectionHolder()) {
 				TransactionSynchronizationManager.bindResource(obtainDataSource(), txObject.getConnectionHolder());
@@ -299,6 +305,8 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		}
 
 		catch (Throwable ex) {
+			// 释放连接回连接池
+			// 当前线程持有的连接句柄也一并释放
 			if (txObject.isNewConnectionHolder()) {
 				DataSourceUtils.releaseConnection(con, obtainDataSource());
 				txObject.setConnectionHolder(null, false);

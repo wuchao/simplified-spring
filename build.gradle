@@ -55,7 +55,7 @@ configure(allprojects) { project ->
     ext.freemarkerVersion    = "2.3.27-incubating"
     ext.groovyVersion        = "2.4.15"
     ext.hsqldbVersion        = "2.4.0"
-    ext.jackson2Version      = "2.9.5"
+    ext.jackson2Version      = "2.12.0"
     ext.jettyVersion         = "9.4.10.v20180503"
     ext.junitJupiterVersion  = "5.0.3"
     ext.junitPlatformVersion = "1.0.3"
@@ -76,7 +76,7 @@ configure(allprojects) { project ->
 
 	dependencyManagement {
 		imports {
-			mavenBom "com.fasterxml.jackson:jackson-bom:2.10.0"
+			mavenBom "com.fasterxml.jackson:jackson-bom:${jackson2Version}"
 			mavenBom "io.netty:netty-bom:4.1.43.Final"
 			mavenBom "io.projectreactor:reactor-bom:${reactorVersion}"
 			mavenBom "io.rsocket:rsocket-bom:1.0.0-RC5"
@@ -415,9 +415,9 @@ configure([rootProject] + javaProjects) { project ->
 			"https://www.eclipse.org/aspectj/doc/released/aspectj5rt-api/",
 			"https://www.ehcache.org/apidocs/2.10.4",
 			"https://www.quartz-scheduler.org/api/2.3.0/",
-			"https://fasterxml.github.io/jackson-core/javadoc/2.10/",
-			"https://fasterxml.github.io/jackson-databind/javadoc/2.10/",
-			"https://fasterxml.github.io/jackson-dataformat-xml/javadoc/2.10/",
+			"https://fasterxml.github.io/jackson-core/javadoc/2.12/",
+			"https://fasterxml.github.io/jackson-databind/javadoc/2.12/",
+			"https://fasterxml.github.io/jackson-dataformat-xml/javadoc/2.12/",
 			"https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/",
 			"https://junit.org/junit4/javadoc/4.12/",
 			"https://junit.org/junit5/docs/5.5.2/api/"
