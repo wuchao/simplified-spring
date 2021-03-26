@@ -71,17 +71,22 @@ public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodRe
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
+		// 通过返回值和调用的方法信息找到对应的结果处理器
 		HandlerMethodReturnValueHandler handler = selectHandler(returnValue, returnType);
 		if (handler == null) {
 			throw new IllegalArgumentException("Unknown return value type: " + returnType.getParameterType().getName());
 		}
+		// 结果处理器处理结果
 		handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
 	}
 
 	@Nullable
 	private HandlerMethodReturnValueHandler selectHandler(@Nullable Object value, MethodParameter returnType) {
+		// 是否同步
 		boolean isAsyncValue = isAsyncReturnValue(value, returnType);
+		// 迭代所有支持的结果处理器
 		for (HandlerMethodReturnValueHandler handler : this.returnValueHandlers) {
+			// 如果结果期望同步，但是处理器不是同步结果处理器类型的，直接跳过
 			if (isAsyncValue && !(handler instanceof AsyncHandlerMethodReturnValueHandler)) {
 				continue;
 			}

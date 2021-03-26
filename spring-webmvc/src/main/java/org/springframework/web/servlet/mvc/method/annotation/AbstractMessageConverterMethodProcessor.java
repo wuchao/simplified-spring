@@ -172,17 +172,22 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 		Class<?> valueType;
 		Type targetType;
 
+		// 如果返回的结果是 String  特殊处理下
 		if (value instanceof CharSequence) {
 			body = value.toString();
 			valueType = String.class;
 			targetType = String.class;
 		}
-		else {
+		else { // 获取原本的信息
+			// 返回值
 			body = value;
+			// 返回值类型
 			valueType = getReturnValueType(body, returnType);
+			// 返回值声明的类型
 			targetType = GenericTypeResolver.resolveType(getGenericType(returnType), returnType.getContainingClass());
 		}
 
+		// 如果是流类型的，例如 InputStream 特殊处理
 		if (isResourceType(value, returnType)) {
 			outputMessage.getHeaders().set(HttpHeaders.ACCEPT_RANGES, "bytes");
 			if (value != null && inputMessage.getHeaders().getFirst(HttpHeaders.RANGE) != null &&
@@ -212,8 +217,11 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 			selectedMediaType = contentType;
 		}
 		else {
+			// 获取请求
 			HttpServletRequest request = inputMessage.getServletRequest();
+			// 获得请求接收的 MediaType  一般为 */*  即接收所有
 			List<MediaType> acceptableTypes = getAcceptableMediaTypes(request);
+			// 获取本方法的相应产出的 MediaType，如果我们没有手动设置，那么会默认支持所有的
 			List<MediaType> producibleTypes = getProducibleMediaTypes(request, valueType, targetType);
 
 			if (body != null && producibleTypes.isEmpty()) {
@@ -221,6 +229,7 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 						"No converter found for return value of type: " + valueType);
 			}
 			List<MediaType> mediaTypesToUse = new ArrayList<>();
+			// 找到请求接收和我们提供的匹配的 MediaType  下面则会抛异常
 			for (MediaType requestedType : acceptableTypes) {
 				for (MediaType producibleType : producibleTypes) {
 					if (requestedType.isCompatibleWith(producibleType)) {
@@ -238,6 +247,8 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 				return;
 			}
 
+			//给所有匹配的进行特殊规则排序
+			//例如我们的produce中设置了两个{"application/json","application/xml"}
 			MediaType.sortBySpecificityAndQuality(mediaTypesToUse);
 
 			for (MediaType mediaType : mediaTypesToUse) {
@@ -257,22 +268,29 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 			}
 		}
 
+		//如果选出来的不为null   就要根据MediaType  来挑选HttpMessageConverter对结果进行序列化并写入了
 		if (selectedMediaType != null) {
 			selectedMediaType = selectedMediaType.removeQualityValue();
+			//对系统的所有消息转换器进行迭代
 			for (HttpMessageConverter<?> converter : this.messageConverters) {
+				//首选要挑选出符合GenericHttpMessageConverter的子类的转换器
 				GenericHttpMessageConverter genericConverter = (converter instanceof GenericHttpMessageConverter ?
 						(GenericHttpMessageConverter<?>) converter : null);
+				//其次要判断这个转换器要能转换当前
 				if (genericConverter != null ?
 						((GenericHttpMessageConverter) converter).canWrite(targetType, valueType, selectedMediaType) :
 						converter.canWrite(valueType, selectedMediaType)) {
+					//写入前在对结果做一次调整
 					body = getAdvice().beforeBodyWrite(body, returnType, selectedMediaType,
 							(Class<? extends HttpMessageConverter<?>>) converter.getClass(),
 							inputMessage, outputMessage);
+					//如果不为null  则开始写入
 					if (body != null) {
 						Object theBody = body;
 						LogFormatUtils.traceDebug(logger, traceOn ->
 								"Writing [" + LogFormatUtils.formatValue(theBody, !traceOn) + "]");
 						addContentDispositionHeader(inputMessage, outputMessage);
+						//转换器不为null  则调用转换器 将结果写入outputMessage
 						if (genericConverter != null) {
 							genericConverter.write(body, targetType, selectedMediaType, outputMessage);
 						}
@@ -301,6 +319,13 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 			}
 			throw new HttpMediaTypeNotAcceptableException(this.allSupportedMediaTypes);
 		}
+
+
+		/**
+		 * 可以看出这个方法就是核心的写入逻辑，先对结果是否是字符串做了下判断，然后对结果是否是资源类型做了下判断。然后分别找到请求接收的MediaType  和我们提供的MediaType  ，找到二者的交集，然后按特殊顺序排序，找到最优的那个MediaType  ，遍历系统的消息转换器，如果消息转换器是HttpMessage消息转换器类型，且可以转换当前消息，那么就调用消息转换器将结果写入outputMessage也就是我们的响应体中
+		 *
+		 * 　　 这儿的消息转换器即HttpMessageConverter即用来序列化数据的工具，现在很多项目都会将springmvc默认的json转换器 jackson换为fastjson来追求更快的序列化速度
+		 */
 	}
 
 	/**

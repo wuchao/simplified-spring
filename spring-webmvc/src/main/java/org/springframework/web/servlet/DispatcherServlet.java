@@ -625,7 +625,16 @@ public class DispatcherServlet extends FrameworkServlet {
 		this.handlerMappings = null;
 
 		if (this.detectAllHandlerMappings) {
-			// 查找所有 HandlerMapping 实例
+
+			/**
+			 * 查找所有 HandlerMapping 实例，默认初始化的 HandlerMapping 有：
+			 * RequestMappingHandlerMapping（使用 @Controller 注解实现的 Controller）
+			 * BeanNameUrlHandlerMapping（继承 Controller 接口或 org.springframework.web.HttpRequestHandler 接口的 Controller）
+			 * RouterFunctionMapping
+			 * SimpleUrlHandlerMapping
+			 * WelcomePageHandlerMapping
+			 */
+
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
 			Map<String, HandlerMapping> matchingBeans =
 					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
@@ -1063,7 +1072,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
-				// 获取当前请求的处理器
+				// 获取当前请求的处理器（即请求的 Controller 对象）
 				// Determine handler for the current request.
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
@@ -1330,6 +1339,12 @@ public class DispatcherServlet extends FrameworkServlet {
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
 			for (HandlerAdapter adapter : this.handlerAdapters) {
+				/**
+				 * AbstractHandlerMethodAdapter：(handler instanceof HandlerMethod && supportsInternal((HandlerMethod) handler))
+				 * HttpRequestHandlerAdapter：(handler instanceof HttpRequestHandler)
+				 * SimpleServletHandlerAdapter：(handler instanceof Servlet)
+				 * SimpleControllerHandlerAdapter：(handler instanceof Controller)
+				 */
 				if (adapter.supports(handler)) {
 					return adapter;
 				}
